@@ -1,0 +1,85 @@
+question,year,part,bl
+What is process? What is the use of it,2024,A,1
+Define Semaphores,2024,A,1
+What is Deadlock give an example,2024,A,1
+Why file concept is required in operating system,2024,A,2
+What is Linux Operating System,2024,A,1
+What is Operating system? Give its architecture,2024,B,2
+Explain Multithreading and compare multiprocessing and multiprogramming,2024,B,4
+Discuss Operating System Functions and its system calls in detail,2024,B,2
+Solve the First Come First Serve scheduling problem,2024,B,3
+Defend how software based Peterson Solution avoid critical section,2024,B,4
+Producer consumer problem,2024,B,2
+Dining philosophers problem,2024,B,2
+Explain Deadlock Prevention,2024,B,2
+Solve the given problem using Banker’s Algorithm,2024,B,3
+Illustrate paging concept with diagram and explain in detail,2024,B,3
+How files and directories can be accessed in operating system with example,2024,B,2
+Discuss memory management and thrashing with example,2024,B,2
+Discuss RAID structure,2024,B,2
+Describe Disk Structure and Disk Attachment,2024,B,2
+What is security Compare System and Network Threats in security with examples,2024,B,4
+Write the difference between preemptive and non preemptive scheduling,2023,A,4
+Write the purpose of awk command,2023,A,1
+Define Hold and Wait,2023,A,1
+What are necessary conditions for deadlocks,2023,A,1
+Define Seek Time and Latency Time,2023,A,1
+What are the different Accessing Methods of a File,2023,A,1
+Explain about the components of kernel module,2023,B,2
+Explain Priority Scheduling Algorithm with example,2023,B,3
+Explain file handling Linux utilities in operating system,2023,B,2
+Explain how scripts use system commands in awk,2023,B,2
+Explain the concept of Inter process communication,2023,B,2
+Write principles of concurrency,2023,B,1
+Explain deadlock avoidance and prevention,2023,B,2
+Explain recovery from deadlocks,2023,B,2
+Explain FCFS disk scheduling algorithms,2023,B,2
+Write differences between FCFS and SCAN disk scheduling algorithms,2023,B,4
+Explain Directory Structure and Operations in detail,2023,B,2
+Explain file access methods,2023,B,2
+Write protection mechanisms used in operating systems,2023,B,2
+List Operating System functions,2019,A,1
+Define System Call with example,2019,A,1
+Define Inter Process Communication,2019,A,1
+What is Process Scheduling,2019,A,1
+Define Deadlock,2019,A,1
+List methods for handling deadlock,2019,A,1
+Define Demand Paging and explain need for demand paging,2019,A,2
+List RAID levels,2019,A,1
+List different File attributes,2019,A,1
+Define protection in operating systems,2019,A,1
+Explain layered approach advantages and disadvantages in Unix OS,2021,B,2
+Explain SRTF scheduling with example processes,2021,B,3
+Explain file handling utilities with examples,2021,B,2
+Discuss disk utilities with examples,2021,B,2
+Explain contents of process control block,2021,B,2
+Discuss hardware instructions used for process synchronization,2021,B,2
+Differentiate between Pipe and FIFO with example,2021,B,4
+Explain deadlock detection algorithm with example,2021,B,2
+Explain conditions for resource deadlock,2021,B,2
+Explain handling deadlocks,2021,B,2
+Explain disk scheduling algorithms FCFS SSTF SCAN C-SCAN,2021,B,2
+Explain file allocation methods,2021,B,2
+Explain different threats in operating systems,2021,B,2
+Discuss free space management methods,2021,B,2
+Define system call,2018,A,1
+Differentiate process and thread,2018,A,4
+How do we measure performance of scheduling algorithms,2018,A,2
+What are advantages of Monitor,2018,A,1
+What is a deadlock,2018,A,1
+What do you mean by requesting edge,2018,A,1
+What is free space management,2018,A,1
+Which page replacement algorithm suffers from belady anomaly,2018,A,2
+List attributes of a file,2018,A,1
+Explain concept of thrashing briefly,2018,A,2
+Discuss different types of system calls,2018,B,2
+Explain PCB and its attributes,2018,B,2
+Explain context switch concept,2018,B,2
+Discuss scheduling algorithms with examples,2018,B,2
+What is semaphore and operations on semaphore,2018,B,2
+Explain recovery from deadlock,2018,B,2
+Explain contiguous allocation memory management technique,2018,B,3
+Explain disk scheduling algorithms FCFS SSTF SCAN LOOK,2018,B,2
+What is file and operations on a file,2018,B,1
+Explain file directory structures,2018,B,2
+Discuss operating system security issues,2018,B,3
