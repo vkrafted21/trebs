@@ -2,9 +2,9 @@ import express, { Request, Response } from "express";
 import { connectDB } from "./utils/db";
 import dotenv from "dotenv";
 import cors from "cors";
-
+import helmet from "helmet";
 // Routes
-//import authRoutes from "./routes/auth";
+import authRoutes from "./routes/auth";
 
 dotenv.config();
 
@@ -17,10 +17,11 @@ app.use(
     credentials: true,
   })
 );
+// app.use(helmet())
 app.use(express.json());
     
 // ================= ROUTES =================
-//app.use("/auth", authRoutes);
+app.use("/auth", authRoutes);
 
 // ================= HEALTH CHECK =================
 app.get("/", (req: Request, res: Response) => {
