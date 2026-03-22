@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from database import questions_collection
-from models.schemas import Query, NewQuestion
+from models.request_models import QueryRequest, NewQuestionRequest
 
 from services.embedding_service import load_or_create_embeddings
 from services.faiss_service import load_or_create_index
@@ -11,8 +11,14 @@ app = FastAPI()
 # load data
 questions_data = list(questions_collection.find())
 
-questions = [q["question"] for q in questions_data]
-vector_ids = [q["vector_id"] for q in questions_data]
+# IMPORTANT: only unique questions for embeddings
+unique_questions = {}
+for q in questions_data:
+    if q["question"] not in unique_questions:
+        unique_questions[q["question"]] = q["vector_id"]
+
+questions = list(unique_questions.keys())
+vector_ids = list(unique_questions.values())
 
 # load embeddings
 embeddings = load_or_create_embeddings(questions)
@@ -27,7 +33,7 @@ def home():
 
 
 @app.post("/similar")
-def find_similar(query: Query):
+def find_similar(query: QueryRequest):
     results = search_questions(index, query.question)
 
     return {
@@ -37,7 +43,7 @@ def find_similar(query: Query):
 
 
 @app.post("/add-question")
-def add_new_question(data: NewQuestion):
+def add_new_question(data: NewQuestionRequest):
     global embeddings
 
     vector_id, embeddings = add_question(index, embeddings, data)

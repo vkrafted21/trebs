@@ -1,9 +1,9 @@
 from pydantic import BaseModel
 
-class Query(BaseModel):
+class QueryRequest(BaseModel):
     question: str
 
-class NewQuestion(BaseModel):
+class NewQuestionRequest(BaseModel):
     question: str
     year: int
     part: str

@@ -19,6 +19,7 @@ def load_or_create_embeddings(questions):
 
     return embeddings
 
+
 def encode_query(text):
     return model.encode(
         [text],
