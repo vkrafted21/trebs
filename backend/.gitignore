@@ -1,4 +1,9 @@
 .env
 embeddings.npy
 faiss_index.bin
-__pycache__/**/*
+
+
+# python cache
+__pycache__/
+*.py[cod]
+*$py.class
