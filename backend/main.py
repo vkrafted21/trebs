@@ -101,7 +101,6 @@ def find_similar(query: Query):
         "results": results,
     }
 
-
 # ADD NEW QUESTION
 @app.post("/add-question")
 def add_question(data: NewQuestion):
