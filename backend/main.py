@@ -6,8 +6,6 @@ from services.embedding_service import load_or_create_embeddings
 from services.faiss_service import load_or_create_index
 from services.question_service import search_questions, add_question
 
-from utils.memory import get_memory_usage
-
 app = FastAPI()
 
 # load data
@@ -35,7 +33,6 @@ def find_similar(query: Query):
     return {
         "query": query.question,
         "results": results,
-        "ram_usage_mb": get_memory_usage()
     }
 
 
