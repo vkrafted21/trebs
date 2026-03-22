@@ -1,9 +1,6 @@
 import os
 import faiss
 import numpy as np
-import psutil
-import torch
-
 from fastapi import FastAPI
 from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer
@@ -15,16 +12,8 @@ app = FastAPI()
 EMBEDDINGS_FILE = "embeddings.npy"
 FAISS_FILE = "faiss_index.bin"
 
-# Reduce PyTorch thread overhead
-torch.set_num_threads(1)
-
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
-# RAM USAGE FUNCTION
-def get_memory_usage():
-    process = psutil.Process(os.getpid())
-    mem = process.memory_info().rss / (1024 * 1024)
-    return round(mem, 2)
 
 # LOAD QUESTIONS
 questions_data = list(questions_collection.find())
@@ -75,22 +64,17 @@ class NewQuestion(BaseModel):
 def home():
     return {
         "message": "API Running",
-        "ram_usage_mb": get_memory_usage()
     }
 
 
-# 🔍 SIMILARITY SEARCH
+#  SIMILARITY SEARCH
 @app.post("/similar")
 def find_similar(query: Query):
-
-    print(f"RAM before encoding: {get_memory_usage()} MB")
 
     query_embedding = model.encode(
         [query.question],
         normalize_embeddings=True
     ).astype("float32")
-
-    print(f"RAM after encoding: {get_memory_usage()} MB")
 
     k = 5
     scores, ids = index.search(query_embedding, k)
@@ -115,7 +99,6 @@ def find_similar(query: Query):
     return {
         "query": query.question,
         "results": results,
-        "ram_usage_mb": get_memory_usage()
     }
 
 
@@ -124,8 +107,6 @@ def find_similar(query: Query):
 def add_question(data: NewQuestion):
 
     global embeddings, index
-
-    print(f"RAM before encoding: {get_memory_usage()} MB")
 
     vector_id = int(index.ntotal)
 
@@ -155,10 +136,7 @@ def add_question(data: NewQuestion):
 
     faiss.write_index(index, FAISS_FILE)
 
-    print(f"RAM after encoding: {get_memory_usage()} MB")
-
     return {
         "message": "Question added successfully",
         "vector_id": vector_id,
-        "ram_usage_mb": get_memory_usage()
     }
