@@ -5,6 +5,7 @@ import cors from "cors";
 import helmet from "helmet";
 // Routes
 import authRoutes from "./routes/auth";
+import questionRoutes from "./routes/question";
 
 dotenv.config();
 
@@ -17,11 +18,12 @@ app.use(
     credentials: true,
   })
 );
-// app.use(helmet())
+app.use(helmet())
 app.use(express.json());
     
 // ================= ROUTES =================
 app.use("/auth", authRoutes);
+app.use("/api", questionRoutes);
 
 // ================= HEALTH CHECK =================
 app.get("/", (req: Request, res: Response) => {
@@ -35,10 +37,11 @@ const startServer = async () => {
    await connectDB();
 
     const PORT = process.env.PORT || 3001;
-     app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
-    });
 
+    app.listen(PORT, () => {
+      console.log(`server running on http://localhost:${PORT}`);
+      console.log(`fastapi running on http://127.0.0.1:8000`);
+    });
   } catch (error) {
     console.error("Failed to start server:", error);
   }

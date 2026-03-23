@@ -17,10 +17,10 @@ function Header() {
     const [scrolled, setScrolled] = useState(false)
 
     const navLinks = [
-        { href: "/dashboard/history", label: "history" },
+        { href: "/dashboard/similarity", label: "similarity" },
         { href: "/dashboard/about", label: "about" }
     ]
-
+    
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 10)
         window.addEventListener("scroll", handleScroll)
