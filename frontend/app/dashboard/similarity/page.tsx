@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Upload, FileText } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 
@@ -12,7 +11,7 @@ import { findSimilarQuestion } from "@/lib/api/question";
 import { useSession } from "@/lib/contexts/session-context";
 
 export default function SimilarityPage() {
-  const { isAuthenticated, loading: sessionLoading } = useSession();
+  const { isAuthenticated } = useSession();
 
   const [question, setQuestion] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -20,7 +19,6 @@ export default function SimilarityPage() {
   const [results, setResults] = useState<any[]>([]);
   const [error, setError] = useState("");
 
-  //  text similarity
   const handleTextSubmit = async () => {
     if (!question.trim()) return;
 
@@ -53,90 +51,100 @@ export default function SimilarityPage() {
     console.log("PDF upload coming soon:", file);
   };
 
-
-
   return (
-    <div className="max-w-5xl mx-auto py-10 px-4 space-y-8">
-      
-      <h1 className="text-3xl font-bold tracking-tight">
-        Check Similarity Score
-      </h1>
+    <div className="max-w-5xl mx-auto py-16 px-4 space-y-10">
 
-      <Card>
-        <CardContent className="p-6 space-y-4">
-          <div className="flex items-center gap-2 font-semibold text-lg">
-            <Upload className="w-5 h-5" />
-            Upload Question Paper (PDF)
-          </div>
+      {/* ===== HEADER ===== */}
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold tracking-tight">
+          Check Similarity
+        </h1>
+        <p className="text-muted-foreground">
+          Upload a full paper or test a single question to find matches instantly.
+        </p>
+      </div>
 
-          <Input
-            type="file"
-            accept="application/pdf"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-          />
+      {/* ===== UPLOAD CARD ===== */}
+      <div className="rounded-3xl bg-card backdrop-blur-xl border border-border p-6 space-y-5 shadow-lg">
+        <div className="flex items-center gap-2 font-semibold text-lg">
+          <Upload className="w-5 h-5 text-primary" />
+          Upload Question Paper
+        </div>
 
-          <Button onClick={handleFileSubmit} disabled={loading}>
-            Check Full Paper
-          </Button>
-        </CardContent>
-      </Card>
+        <Input
+          type="file"
+          accept="application/pdf"
+          onChange={(e) => setFile(e.target.files?.[0] || null)}
+        />
 
-      <Card>
-        <CardContent className="p-6 space-y-4">
-          <div className="flex items-center gap-2 font-semibold text-lg">
-            <FileText className="w-5 h-5" />
-            Check Single Question
-          </div>
+        <Button
+          onClick={handleFileSubmit}
+          disabled={loading}
+          className="bg-primary hover:opacity-90 transition"
+        >
+          Check Full Paper
+        </Button>
+      </div>
 
-          <Textarea
-            placeholder="Enter your question..."
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-          />
+      {/* ===== TEXT CARD ===== */}
+      <div className="rounded-3xl bg-card backdrop-blur-xl border border-border p-6 space-y-5 shadow-lg">
+        <div className="flex items-center gap-2 font-semibold text-lg">
+          <FileText className="w-5 h-5 text-primary" />
+          Check Single Question
+        </div>
 
-          <Button onClick={handleTextSubmit} disabled={loading}>
-            {loading ? "Checking..." : "Check Similarity"}
-          </Button>
-        </CardContent>
-      </Card>
+        <Textarea
+          placeholder="Enter your question..."
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          className="min-h-[120px]"
+        />
 
+        <Button
+          onClick={handleTextSubmit}
+          disabled={loading}
+          className="bg-primary hover:opacity-90 transition"
+        >
+          {loading ? "Checking..." : "Check Similarity"}
+        </Button>
+      </div>
+
+      {/* ===== ERROR ===== */}
       {error && (
-        <p className="text-red-500 text-center font-medium">{error}</p>
+        <p className="text-red-400 text-center font-medium">{error}</p>
       )}
 
-      {/* ================= RESULTS ================= */}
+      {/* ===== RESULTS ===== */}
       {results.length > 0 && (
-        <Card>
-          <CardContent className="p-6 space-y-4">
-            <h2 className="text-xl font-semibold">Results</h2>
+        <div className="rounded-3xl bg-card backdrop-blur-xl border border-border p-6 space-y-4 shadow-lg">
+          <h2 className="text-xl font-semibold">Results</h2>
 
-            {results.map((r, i) => (
-              <div
-                key={i}
-                className="border rounded-lg p-4 flex justify-between items-center"
-              >
-                <div>
-                  <p className="font-medium">{r.question}</p>
-                  <p className="text-sm text-muted-foreground">
-                    Year: {r.year} | Part: {r.part || "-"}
-                  </p>
-                </div>
-
-                <div
-                  className={`font-semibold ${
-                    r.similarity > 0.8
-                      ? "text-red-500"
-                      : r.similarity > 0.5
-                      ? "text-yellow-500"
-                      : "text-green-500"
-                  }`}
-                >
-                  {(r.similarity * 100).toFixed(2)}%
-                </div>
+          {results.map((r, i) => (
+            <div
+              key={i}
+              className="p-4 rounded-xl border border-border flex justify-between items-center hover:bg-white/5 transition"
+            >
+              <div>
+                <p className="font-medium">{r.question}</p>
+                <p className="text-sm text-muted-foreground">
+                  Year: {r.year} | Part: {r.part || "-"}
+                </p>
               </div>
-            ))}
-          </CardContent>
-        </Card>
+
+              <div
+                className={`font-semibold text-lg ${
+                  r.similarity > 0.8
+                    ? "text-red-400"
+                    : r.similarity > 0.5
+                    ? "text-yellow-400"
+                    : "text-green-400"
+                }`}
+              >
+                {(r.similarity * 100).toFixed(1)}%
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Header from "@/components/header";
-import Footer from "@/components/footer"
+import Footer from "@/components/footer";
 import { Geist, Geist_Mono } from "next/font/google";
 import Providers from "@/components/providers";
+// @ts-ignore: CSS module import without declaration
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,20 +23,25 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Providers>
-          <Header />
+  <html lang="en" className="dark">
+    <body
+      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+    >
+      <Providers>
+        <Header />
+
+        {/* MAIN CONTENT WRAPPER (FIXES HEADER OVERLAP) */}
+        <main className="pt-24">
           {children}
-          <Footer/>
-        </Providers>
-      </body>
-    </html>
-  );
+        </main>
+
+        <Footer />
+      </Providers>
+    </body>
+  </html>
+);
 }

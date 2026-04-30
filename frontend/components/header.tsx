@@ -18,7 +18,7 @@ function Header() {
 
     const navLinks = [
         { href: "/dashboard/similarity", label: "similarity" },
-        { href: "/dashboard/about", label: "about" }
+        { href: "/", label: "about" }
     ]
     
     useEffect(() => {

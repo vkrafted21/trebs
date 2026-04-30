@@ -82,7 +82,7 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-.dark {
+/* .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -114,14 +114,64 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+} */
+
+.dark {
+  /* ===== BACKGROUND (deep blue gradient base) ===== */
+  --background: oklch(0.12 0.03 250);  /* deep navy */
+  --foreground: oklch(0.95 0.02 250);  /* soft white-blue */
+
+  /* ===== CARDS (glass effect base) ===== */
+  --card: oklch(0.18 0.03 250 / 0.6); /* translucent blue */
+  --card-foreground: oklch(0.95 0.02 250);
+
+  --popover: oklch(0.18 0.03 250 / 0.8);
+  --popover-foreground: oklch(0.95 0.02 250);
+
+  /* ===== PRIMARY (glow blue) ===== */
+  --primary: oklch(0.65 0.18 250);  /* neon blue */
+  --primary-foreground: oklch(0.1 0.02 250);
+
+  /* ===== SECONDARY ===== */
+  --secondary: oklch(0.22 0.03 250);
+  --secondary-foreground: oklch(0.9 0.02 250);
+
+  /* ===== MUTED ===== */
+  --muted: oklch(0.22 0.02 250);
+  --muted-foreground: oklch(0.7 0.02 250);
+
+  /* ===== ACCENT ===== */
+  --accent: oklch(0.3 0.05 250);
+  --accent-foreground: oklch(0.95 0.02 250);
+
+  /* ===== BORDERS / INPUT ===== */
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.65 0.18 250);
+
+  /* ===== SIDEBAR ===== */
+  --sidebar: oklch(0.16 0.03 250);
+  --sidebar-foreground: oklch(0.95 0.02 250);
+  --sidebar-primary: oklch(0.65 0.18 250);
+  --sidebar-primary-foreground: oklch(0.1 0.02 250);
+  --sidebar-accent: oklch(0.22 0.03 250);
+  --sidebar-accent-foreground: oklch(0.95 0.02 250);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.65 0.18 250);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
+  /* body {
     @apply bg-background text-foreground;
+  } */
+   body {
+  @apply text-foreground;
+  background: radial-gradient(circle at top, rgba(59,130,246,0.15), transparent 40%),
+              radial-gradient(circle at bottom, rgba(99,102,241,0.15), transparent 40%),
+              oklch(0.12 0.03 250);
   }
   html {
     @apply font-sans;
