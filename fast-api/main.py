@@ -59,15 +59,21 @@ def add_new_question(data: NewQuestionRequest):
 @app.post("/analyze-paper")
 async def analyze_paper(file: UploadFile = File(...)):
 
+    import re
+    import fitz
+
+    # ---------- READ PDF ----------
     pdf_bytes = await file.read()
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
 
     text = ""
+
     for page in doc:
         text += page.get_text() + "\n"
 
     lines = [line.strip() for line in text.split("\n") if line.strip()]
 
+    # ---------- OUTPUT ----------
     part_a = []
     part_b = {}
 
@@ -75,43 +81,67 @@ async def analyze_paper(file: UploadFile = File(...)):
     inside_part_b = False
     current_unit = None
 
+    # ---------- CLEAN QUESTION ----------
+    def clean_question(q):
+        q = q.replace("\u200b", "")            
+        q = re.sub(r'^\d+\.\s*', '', q)       
+        q = re.sub(r'^[a-e]\)\s*', '', q)      
+        return q.strip()
+
+    # ---------- GET SIMILARITY ----------
+    def get_matches(q):
+        results = search_questions(index, q)
+
+        filtered = [
+            r for r in results
+            if r["similarity"] >= 0.50
+        ][:3]
+
+        if not filtered:
+            return [
+                {
+                    "message": "New Question"
+                }
+            ]
+
+        return filtered
+
+    # ---------- PARSER ----------
     for line in lines:
 
         # detect sections
-        if line == "PART-A":
+        if line.upper() == "PART-A":
             inside_part_a = True
             inside_part_b = False
             continue
 
-        if line == "PART-B":
+        if line.upper() == "PART-B":
             inside_part_a = False
             inside_part_b = True
             continue
 
-        # ---------------- PART A ----------------
+        # ================= PART A =================
         if inside_part_a:
 
             if re.match(r'^[a-e]\)', line.lower()):
 
-                q = re.sub(r'^[a-e]\)\s*', '', line).strip()
-
-                matches = search_questions(index, q)
+                q = clean_question(line)
 
                 part_a.append({
                     "question": q,
-                    "matches": matches
+                    "matches": get_matches(q)
                 })
 
-        # ---------------- PART B ----------------
+        # ================= PART B =================
         elif inside_part_b:
 
-            # detect unit
-            if re.match(r'^UNIT-[IVX]+$', line):
-                current_unit = line
+            # detect UNIT
+            if re.match(r'^UNIT-[IVX]+$', line.upper()):
+                current_unit = line.upper()
                 part_b[current_unit] = []
                 continue
 
-            # skip OR completely
+            # skip OR
             if line.upper() == "OR":
                 continue
 
@@ -120,32 +150,32 @@ async def analyze_paper(file: UploadFile = File(...)):
                 # numbered questions
                 if re.match(r'^\d+\.', line):
 
-                    q = re.sub(r'^\d+\.\s*', '', line).strip()
+                    q = clean_question(line)
 
-                    matches = search_questions(index, q)
+                    if q:
+                        part_b[current_unit].append({
+                            "question": q,
+                            "matches": get_matches(q)
+                        })
 
-                    part_b[current_unit].append({
-                        "question": q,
-                        "matches": matches
-                    })
-
-                # subquestions a) b)
+                # subquestions
                 elif re.match(r'^[ab]\)', line.lower()):
 
-                    q = re.sub(r'^[ab]\)\s*', '', line).strip()
+                    q = clean_question(line)
 
-                    matches = search_questions(index, q)
+                    if q:
+                        part_b[current_unit].append({
+                            "question": q,
+                            "matches": get_matches(q)
+                        })
 
-                    part_b[current_unit].append({
-                        "question": q,
-                        "matches": matches
-                    })
-
+    # ---------- TOTAL ----------
     total_questions = len(part_a)
 
     for unit in part_b:
         total_questions += len(part_b[unit])
 
+    # ---------- RESPONSE ----------
     return {
         "total_questions": total_questions,
         "part_a": part_a,
