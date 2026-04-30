@@ -41,15 +41,38 @@ export default function SimilarityPage() {
   };
 
   const handleFileSubmit = async () => {
-    if (!file) return;
+  if (!file) return;
 
-    if (!isAuthenticated) {
-      setError("Please login first");
-      return;
-    }
+  if (!isAuthenticated) {
+    setError("Please login first");
+    return;
+  }
 
-    console.log("PDF upload coming soon:", file);
-  };
+  setLoading(true);
+  setError("");
+
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const token = localStorage.getItem("token");
+
+    const res = await fetch("/api/similarity/upload-paper", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    const data = await res.json();
+    setResults(data.results || []);
+  } catch (err: any) {
+    setError(err.message || "Upload failed");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="max-w-5xl mx-auto py-16 px-4 space-y-10">
