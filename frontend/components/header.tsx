@@ -28,8 +28,11 @@ function Header() {
     }, [])
 
     return (
-        <div className={`fixed top-0 z-50 w-full transition-all duration-300 ${scrolled ? "bg-background/80 backdrop-blur-md shadow-md border-b border-primary/10" : "bg-background/60 backdrop-blur-sm"
-            }`}>
+        <div className={`fixed top-0 z-50 w-full transition-all duration-300 
+  ${scrolled 
+    ? "bg-background/80 backdrop-blur-md shadow-md border-b border-border/20" 
+    : "bg-transparent"
+  }`}>
             <header className="relative mx-auto px-6">
                 <div className="flex h-16 items-center justify-between">
 
