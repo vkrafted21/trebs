@@ -1,3 +1,10 @@
 node_modules/
 .env
+<<<<<<< HEAD
 reqs/
+=======
+embeddings.npy
+faiss_index.bin
+__pycache__/**/*
+venv/**/*
+>>>>>>> 71dd64e (changes)
