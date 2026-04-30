@@ -131,7 +131,7 @@ export default function SimilarityPage() {
                 </p>
               </div>
 
-              <div
+              {/* <div
                 className={`font-semibold text-lg ${
                   r.similarity > 0.8
                     ? "text-red-400"
@@ -141,7 +141,7 @@ export default function SimilarityPage() {
                 }`}
               >
                 {(r.similarity * 100).toFixed(1)}%
-              </div>
+              </div> */}
             </div>
           ))}
         </div>
