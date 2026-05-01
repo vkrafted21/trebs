@@ -85,7 +85,7 @@ export default function SimilarityPage() {
     }
   };
 
-  // ---------------- BADGE ----------------
+  // ---------------- SINGLE QUESTION BADGE ----------------
   const getBadge = (score: number) => {
     if (score >= 0.85) return "bg-red-500/20 text-red-400";
     if (score >= 0.65) return "bg-yellow-500/20 text-yellow-400";
@@ -104,10 +104,18 @@ export default function SimilarityPage() {
       </div>
 
       {/* PDF CARD */}
-      <div className="rounded-3xl border p-6 bg-card shadow-lg space-y-4">
-        <div className="flex gap-2 items-center font-semibold text-lg">
-          <Upload className="w-5 h-5 text-primary" />
-          Upload Question Paper
+      <div className="rounded-3xl border border-border bg-card p-8 shadow-xl space-y-6">
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-2xl bg-primary/10">
+            <Upload className="w-6 h-6 text-primary" />
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-bold">Upload Question Paper</h2>
+            <p className="text-sm text-muted-foreground">
+              Upload PDF and analyze repeated questions instantly
+            </p>
+          </div>
         </div>
 
         <Input
@@ -160,7 +168,7 @@ export default function SimilarityPage() {
               <div>
                 <p className="font-medium">{r.question}</p>
                 <p className="text-sm text-muted-foreground">
-                  Year: {r.year} | Part: {r.part}
+                  Year: {r.year} | Part: {r.part} | BL: {r.bl}
                 </p>
               </div>
 
@@ -181,9 +189,7 @@ export default function SimilarityPage() {
         <div className="space-y-8">
 
           <div className="rounded-3xl border p-6 bg-card shadow-lg">
-            <h2 className="text-2xl font-bold">
-              Paper Analysis
-            </h2>
+            <h2 className="text-2xl font-bold">Paper Analysis</h2>
 
             <p className="text-muted-foreground mt-2">
               Total Questions: {paperResults.total_questions}
@@ -196,23 +202,27 @@ export default function SimilarityPage() {
 
             {paperResults.part_a?.map((q: any, i: number) => (
               <div key={i} className="border rounded-xl p-4 space-y-3">
-                <p className="font-medium">{q.question}</p>
+                <p className="text-lg font-semibold">{q.question}</p>
 
                 {q.matches?.map((m: any, j: number) => (
                   <div
                     key={j}
-                    className="flex justify-between text-sm text-muted-foreground"
+                    className="flex justify-between items-center p-3"
                   >
-                    <span>{m.question}</span>
+                    <p className="text-sm font-medium text-stone-600">
+                      {m.question || m.message}
+                    </p>
 
-                    {m.similarity && (
-                      <span
-                        className={`px-2 py-1 rounded ${getBadge(
-                          m.similarity
-                        )}`}
-                      >
-                        {(m.similarity * 100).toFixed(1)}%
-                      </span>
+                    {m.year && (
+                      <div className="flex gap-2">
+                        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">
+                          {m.year}
+                        </span>
+
+                        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-500/10 text-yellow-400">
+                          BL {m.bl}
+                        </span>
+                      </div>
                     )}
                   </div>
                 ))}
@@ -227,27 +237,31 @@ export default function SimilarityPage() {
                 key={idx}
                 className="rounded-3xl border p-6 bg-card shadow-lg space-y-5"
               >
-                <h3 className="text-xl font-semibold">{unit}</h3>
+                <h3 className="text-xl font-bold">{unit}</h3>
 
                 {questions.map((q: any, i: number) => (
                   <div key={i} className="border rounded-xl p-4 space-y-3">
-                    <p className="font-medium">{q.question}</p>
+                    <p className="text-lg font-semibold">{q.question}</p>
 
                     {q.matches?.map((m: any, j: number) => (
                       <div
                         key={j}
-                        className="flex justify-between text-sm text-muted-foreground"
+                        className="flex justify-between items-center p-3"
                       >
-                        <span>{m.question}</span>
+                        <p className="text-sm font-medium text-stone-600">
+                          {m.question || m.message}
+                        </p>
 
-                        {m.similarity && (
-                          <span
-                            className={`px-2 py-1 rounded ${getBadge(
-                              m.similarity
-                            )}`}
-                          >
-                            {(m.similarity * 100).toFixed(1)}%
-                          </span>
+                        {m.year && (
+                          <div className="flex gap-2">
+                            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">
+                              {m.year}
+                            </span>
+
+                            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-500/10 text-yellow-400">
+                              BL {m.bl}
+                            </span>
+                          </div>
                         )}
                       </div>
                     ))}
