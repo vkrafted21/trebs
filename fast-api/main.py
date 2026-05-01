@@ -181,3 +181,129 @@ async def analyze_paper(file: UploadFile = File(...)):
         "part_a": part_a,
         "part_b": part_b
     }
+    
+@app.get("/analytics")
+def get_analytics():
+
+    from collections import defaultdict
+
+    # -----------------------------------
+    # FETCH ALL QUESTIONS FROM MONGODB
+    # -----------------------------------
+    data = list(questions_collection.find())
+
+    # -----------------------------------
+    # COUNTERS
+    # -----------------------------------
+    bl_counts = defaultdict(int)
+    year_bl = defaultdict(lambda: defaultdict(int))
+    part_bl = defaultdict(lambda: defaultdict(int))
+    year_avg = defaultdict(list)
+    question_repeat = defaultdict(int)
+
+    # -----------------------------------
+    # PROCESS DATA
+    # -----------------------------------
+    for row in data:
+
+        question = row.get("question", "").strip()
+        year = row.get("year")
+        part = row.get("part")
+        bl = row.get("bl")
+
+        if not year or not bl:
+            continue
+
+        # overall BL count
+        bl_counts[f"BL{bl}"] += 1
+
+        # year wise BL
+        year_bl[str(year)][f"BL{bl}"] += 1
+
+        # part wise BL
+        if part:
+            part_bl[part][f"BL{bl}"] += 1
+
+        # avg difficulty
+        year_avg[str(year)].append(bl)
+
+        # repeated questions
+        if question:
+            question_repeat[question] += 1
+
+    # -----------------------------------
+    # 1. BL DISTRIBUTION
+    # -----------------------------------
+    bl_distribution = [
+        {"name": key, "value": value}
+        for key, value in sorted(bl_counts.items())
+    ]
+
+    # -----------------------------------
+    # 2. BL TREND BY YEAR
+    # -----------------------------------
+    bl_trend_by_year = []
+
+    for year in sorted(year_bl.keys()):
+
+        row = {"year": year}
+
+        for bl in range(1, 7):
+            row[f"BL{bl}"] = year_bl[year].get(f"BL{bl}", 0)
+
+        bl_trend_by_year.append(row)
+
+    # -----------------------------------
+    # 3. AVG DIFFICULTY BY YEAR
+    # -----------------------------------
+    avg_difficulty = []
+
+    for year in sorted(year_avg.keys()):
+
+        values = year_avg[year]
+
+        avg_difficulty.append({
+            "year": year,
+            "score": round(sum(values) / len(values), 2)
+        })
+
+    # -----------------------------------
+    # 4. PARTWISE BL
+    # -----------------------------------
+    partwise_bl = []
+
+    for part in sorted(part_bl.keys()):
+
+        row = {"part": part}
+
+        for bl in range(1, 7):
+            row[f"BL{bl}"] = part_bl[part].get(f"BL{bl}", 0)
+
+        partwise_bl.append(row)
+
+    # -----------------------------------
+    # 5. MOST REPEATED QUESTIONS
+    # -----------------------------------
+    most_repeated_questions = sorted(
+        [
+            {"question": q, "count": c}
+            for q, c in question_repeat.items()
+        ],
+        key=lambda x: x["count"],
+        reverse=True
+    )[:10]
+
+    # -----------------------------------
+    # RESPONSE
+    # -----------------------------------
+    return {
+        "total_questions": len(data),
+
+        "charts": {
+            "bl_distribution": bl_distribution,
+            "bl_trend_by_year": bl_trend_by_year,
+            "avg_difficulty": avg_difficulty,
+            "partwise_bl": partwise_bl,
+            "most_repeated_questions": most_repeated_questions
+        }
+    }
