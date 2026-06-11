@@ -50,7 +50,7 @@ The system:
 
 📷 **Screenshot:**
 
-![Single Question Analysis](screenshots/single_question.jpg)
+![Single Question Analysis](screenshots/single-question.jpg)
 
 ---
 
